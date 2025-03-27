@@ -13,7 +13,9 @@ namespace EventManager.Entities
         public string Email { get; set; } = string.Empty;
         public UserStatus Status { get; set; } // approved | pending
         public UserRole Role { get; set; } // admin | organizer | user
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public string PasswordHash { get; set; } = string.Empty;
+        public string? RefreshToken { get; set; }
+        public DateTime? RefreshTokenExpiryTime { get; set; }
         public DateTime? CreatedDate { get; set; }
 
         // relation many to many

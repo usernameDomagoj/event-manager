@@ -1,6 +1,7 @@
 ﻿using EventManager.Data;
 using EventManager.Entities;
 using EventManager.Models.Event;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,6 +23,7 @@ namespace EventManager.Controllers
         // GET: api/events?order=desc
         // GET: api/events?searchTerm=a
         // GET: api/events?pageSize=10&page=1
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Event>>> GetAll(string? order, string? searchTerm, int? pageSize, int? page)
         {
@@ -55,6 +57,7 @@ namespace EventManager.Controllers
         }
 
         // GET: api/events/{id}
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ActionResult<Event>> GetById(int id)
         {
@@ -69,6 +72,7 @@ namespace EventManager.Controllers
         }
 
         // POST: api/products
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<Event>> Create(EventCreateDto newEvent)
         {
@@ -91,6 +95,7 @@ namespace EventManager.Controllers
         }
 
         // PUT: api/products/{id}
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, EventCreateDto updatedEvent)
         {
@@ -118,6 +123,7 @@ namespace EventManager.Controllers
         }
 
         // DELETE: api/products/{id}
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

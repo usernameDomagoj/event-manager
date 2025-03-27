@@ -144,6 +144,16 @@ namespace EventManager.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("RefreshTokenExpiryTime")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("Role")
                         .HasColumnType("INTEGER");
 
@@ -165,6 +175,7 @@ namespace EventManager.Migrations
                             CreatedDate = new DateTime(2000, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@admin",
                             Name = "Admin",
+                            PasswordHash = "",
                             Role = 0,
                             Status = 0,
                             Username = "admin"
