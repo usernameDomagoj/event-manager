@@ -1,5 +1,6 @@
 ﻿using EventManager.Data;
 using EventManager.Entities;
+using EventManager.Models.Event;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -69,20 +70,29 @@ namespace EventManager.Controllers
 
         // POST: api/products
         [HttpPost]
-        public async Task<ActionResult<Event>> Create(Event newEvent)
+        public async Task<ActionResult<Event>> Create(EventCreateDto newEvent)
         {
-            newEvent.Participants = [];
-            newEvent.CreatedDate = DateTime.Now;
-            newEvent.LastUpdatedDate = null;
-            _context.Events.Add(newEvent);
+            var Event = new Event
+            {
+                Title = newEvent.Title,
+                Description = newEvent.Description,
+                Date = newEvent.Date,
+                Location = newEvent.Location,
+                CreatedDate = DateTime.UtcNow,
+                CreatedById = 1 // TODO get user by token
+            };
+
+            _context.Events.Add(Event);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetById), new { id = newEvent.Id }, newEvent);
+            newEvent.Id = Event.Id;
+
+            return CreatedAtAction(nameof(GetById), new { id = Event.Id }, newEvent);
         }
 
         // PUT: api/products/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, Event updatedEvent)
+        public async Task<IActionResult> Update(int id, EventCreateDto updatedEvent)
         {
             if (id != updatedEvent.Id)
             {
