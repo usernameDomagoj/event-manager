@@ -8,9 +8,9 @@ namespace EventManager.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class AuthController(IAuthService authService) : ControllerBase
     {
-        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<ActionResult<User>> Register(UserRegisterDto request)
         {
@@ -24,7 +24,6 @@ namespace EventManager.Controllers
             return Ok(User);
         }
 
-        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult<TokenResponseDto>> Login(UserLoginDto request)
         {

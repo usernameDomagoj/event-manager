@@ -23,8 +23,8 @@ namespace EventManager.Controllers
         // GET: api/events?order=desc
         // GET: api/events?searchTerm=a
         // GET: api/events?pageSize=10&page=1
-        [Authorize]
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Event>>> GetAll(string? order, string? searchTerm, int? pageSize, int? page)
         {
 
@@ -57,8 +57,8 @@ namespace EventManager.Controllers
         }
 
         // GET: api/events/{id}
-        [AllowAnonymous]
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<Event>> GetById(int id)
         {
             var Event = await _context.Events.FindAsync(id);
@@ -72,8 +72,8 @@ namespace EventManager.Controllers
         }
 
         // POST: api/products
-        [Authorize]
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Event>> Create(EventCreateDto newEvent)
         {
             var Event = new Event
@@ -95,8 +95,8 @@ namespace EventManager.Controllers
         }
 
         // PUT: api/products/{id}
-        [Authorize]
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> Update(int id, EventCreateDto updatedEvent)
         {
             if (id != updatedEvent.Id)
@@ -123,8 +123,8 @@ namespace EventManager.Controllers
         }
 
         // DELETE: api/products/{id}
-        [Authorize]
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             var Event = await _context.Events.FindAsync(id);
