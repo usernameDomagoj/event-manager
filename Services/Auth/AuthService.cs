@@ -50,7 +50,7 @@ namespace EventManager.Services.Auth
             {
                 new Claim(ClaimTypes.Name, user.Username),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Role, nameof(user.Role))
+                new Claim(ClaimTypes.Role, user.Role.ToString())
             };
 
             var Key = new SymmetricSecurityKey(
@@ -69,12 +69,12 @@ namespace EventManager.Services.Auth
             return new JwtSecurityTokenHandler().WriteToken(TokenDescriptor);
         }
 
-        private async Task<TokenResponseDto> CreateTokenResponse(User? user)
+        private async Task<TokenResponseDto> CreateTokenResponse(User user)
         {
             return new TokenResponseDto
             {
-                AccessToken = CreateToken(user!),
-                RefreshToken = await GenerateAndSaveRefreshTokenAsync(user!)
+                AccessToken = CreateToken(user),
+                RefreshToken = await GenerateAndSaveRefreshTokenAsync(user)
             };
         }
 
@@ -109,8 +109,8 @@ namespace EventManager.Services.Auth
             User.Name = request.Name;
             User.Username = request.Username;
             User.Email = request.Email;
-            User.Status = UserStatus.Pending;  // TODO make endpoint for approval and setting the role (only by admin)
-            User.Role = UserRole.User;  // TODO make endpoint for approval and setting the role (only by admin)
+            User.Status = UserStatus.Pending;
+            User.Role = UserRole.User;
             User.PasswordHash = HashedPassword;
             User.CreatedDate = DateTime.UtcNow;
 

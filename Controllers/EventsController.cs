@@ -1,9 +1,11 @@
 ﻿using EventManager.Data;
 using EventManager.Entities;
+using EventManager.Enums;
 using EventManager.Models.Event;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace EventManager.Controllers
 {
@@ -27,7 +29,6 @@ namespace EventManager.Controllers
         [Authorize]
         public async Task<ActionResult<IEnumerable<Event>>> GetAll(string? order, string? searchTerm, int? pageSize, int? page)
         {
-
             var Events = from e in _context.Events
                          .Include(e => e.CreatedBy)
                          .Include(e => e.Participants)
@@ -76,6 +77,14 @@ namespace EventManager.Controllers
         [Authorize]
         public async Task<ActionResult<Event>> Create(EventCreateDto newEvent)
         {
+            var UserId = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var UserData = await _context.Users.FindAsync(UserId);
+
+            if (UserData?.Status != UserStatus.Approved)
+            {
+                return Problem("User is not approved.", null, 403);
+            }
+
             var Event = new Event
             {
                 Title = newEvent.Title,
@@ -83,12 +92,11 @@ namespace EventManager.Controllers
                 Date = newEvent.Date,
                 Location = newEvent.Location,
                 CreatedDate = DateTime.UtcNow,
-                CreatedById = 1 // TODO get user by token
+                CreatedById = UserId
             };
 
             _context.Events.Add(Event);
             await _context.SaveChangesAsync();
-
             newEvent.Id = Event.Id;
 
             return CreatedAtAction(nameof(GetById), new { id = Event.Id }, newEvent);
@@ -104,11 +112,17 @@ namespace EventManager.Controllers
                 return BadRequest();
             }
 
+            var UserId = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var Event = await _context.Events.FindAsync(id);
 
             if (Event == null)
             {
                 return NotFound();
+            }
+
+            if (Event.CreatedById != UserId)
+            {
+                return StatusCode(405);
             }
 
             Event.Title = updatedEvent.Title;
@@ -127,11 +141,18 @@ namespace EventManager.Controllers
         [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
+            var UserId = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var IsAdmin = User.IsInRole(UserRole.Admin.ToString());
             var Event = await _context.Events.FindAsync(id);
 
             if (Event == null)
             {
                 return NotFound();
+            }
+            
+            if (Event.CreatedById != UserId & IsAdmin == false)
+            {
+                return StatusCode(405);
             }
 
             _context.Events.Remove(Event);

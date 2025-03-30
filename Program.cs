@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -57,6 +56,8 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 
