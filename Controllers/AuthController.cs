@@ -57,7 +57,7 @@ namespace EventManager.Controllers
         }
 
         [HttpPost("update-user")]
-        [Authorize(Roles = nameof(UserRole.Admin))]
+        [AuthorizeRoles(UserRole.Admin)]
         public async Task<ActionResult> UpdateUser(UpdateUserDto request)
         {
             var User = await _context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);

@@ -10,7 +10,7 @@ namespace EventManager.Entities
         public required string Description { get; set; }
         public DateTime Date { get; set; }
         public required string Location { get; set; }
-        public DateTime? CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
         public DateTime? LastUpdatedDate { get; set; }
 
 

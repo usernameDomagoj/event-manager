@@ -133,7 +133,6 @@ namespace EventManager.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("CreatedDate")
-                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")

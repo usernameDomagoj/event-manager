@@ -2,6 +2,8 @@
 using EventManager.Entities;
 using EventManager.Enums;
 using EventManager.Models.Event;
+using EventManager.Services.Auth;
+using EventManager.Services.Events;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,14 +13,9 @@ namespace EventManager.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class EventsController : ControllerBase
+    public class EventsController(AppDbContext context, ITransformDataService transformDataService) : ControllerBase
     {
-        private readonly AppDbContext _context;
-
-        public EventsController(AppDbContext context)
-        {
-            _context = context;
-        }
+        private readonly AppDbContext _context = context;
 
         // GET: api/events
         // GET: api/events?order=asc
@@ -27,7 +24,7 @@ namespace EventManager.Controllers
         // GET: api/events?pageSize=10&page=1
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<Event>>> GetAll(string? order, string? searchTerm, int? pageSize, int? page)
+        public async Task<ActionResult<IEnumerable<EventDto>>> GetAll(string? order, string? searchTerm, int? pageSize, int? page)
         {
             var Events = from e in _context.Events
                          .Include(e => e.CreatedBy)
@@ -54,27 +51,40 @@ namespace EventManager.Controllers
                 Events = Events.Skip(offset).Take(PageSize);
             }
 
-            return Ok(await Events.AsNoTracking().ToListAsync());
+            var EventsList = await Events.AsNoTracking().ToListAsync();
+            var EventsDto = new List<EventDto>();
+
+            foreach (Event @event in EventsList)
+            {
+                EventsDto.Add(transformDataService.EventToDto(@event));
+            }
+
+            return Ok(EventsDto);
         }
 
         // GET: api/events/{id}
         [HttpGet("{id}")]
-        [AllowAnonymous]
-        public async Task<ActionResult<Event>> GetById(int id)
+        [Authorize]
+        public async Task<ActionResult<EventDto>> GetById(int id)
         {
-            var Event = await _context.Events.FindAsync(id);
+            var Event = await _context.Events
+                        .Include(e => e.CreatedBy)
+                        .Include(e => e.Participants)
+                        .FirstOrDefaultAsync(e => e.Id == id);
 
             if (Event == null)
             {
                 return NotFound();
             }
 
-            return Ok(Event);
+            var EventDto = transformDataService.EventToDto(Event);
+
+            return Ok(EventDto);
         }
 
-        // POST: api/products
+        // POST: api/events
         [HttpPost]
-        [Authorize]
+        [AuthorizeRoles(UserRole.Admin, UserRole.Organizer)]
         public async Task<ActionResult<Event>> Create(EventCreateDto newEvent)
         {
             var UserId = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
@@ -92,7 +102,8 @@ namespace EventManager.Controllers
                 Date = newEvent.Date,
                 Location = newEvent.Location,
                 CreatedDate = DateTime.UtcNow,
-                CreatedById = UserId
+                CreatedById = UserId,
+                Participants = []
             };
 
             _context.Events.Add(Event);
@@ -159,6 +170,46 @@ namespace EventManager.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        // TODO unit tests
+        // POST: api/events/{id}/participate
+        [HttpPut("{id}/participate")]
+        [Authorize]
+        public async Task<ActionResult> ParticipateInEvent(int id)
+        {
+            var UserId = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var UserData = await _context.Users.FindAsync(UserId);
+
+            if (UserData == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            var Event = await _context.Events
+                        .Include(e => e.Participants)
+                        .FirstOrDefaultAsync(e => e.Id == id);
+
+            if (Event == null)
+            {
+                return NotFound("Event not found.");
+            }
+
+            Event.Participants ??= [];
+
+            if (Event.Participants.Any(p => p.Id == UserData.Id))
+            {
+                Event.Participants.Remove(UserData);
+                await _context.SaveChangesAsync();
+
+                return Ok("User removed from event.");
+            }
+
+            Event.Participants.Add(UserData);
+            await _context.SaveChangesAsync();
+
+            return Ok("User added to event.");
+
         }
     }
 }
