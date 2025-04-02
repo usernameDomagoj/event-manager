@@ -172,7 +172,6 @@ namespace EventManager.Controllers
             return NoContent();
         }
 
-        // TODO unit tests
         // POST: api/events/{id}/participate
         [HttpPut("{id}/participate")]
         [Authorize]

@@ -22,6 +22,41 @@ Admin user login data:
 
 With admin privileges, you can change user role (`Admin`, `Organizer` and `User`) and user status (`Approved` and `Pending`) to give them to give them accordingly privileges.
 
+## Roles
+
+### Admin (top level privileges user)
+- can update users
+- can get events
+- can post events
+- can update his events
+- can delete events
+- can participate in event
+
+### Organizer
+- can get events
+- can post events
+- can update his events
+- can delete his events
+- can participate in event
+
+### User
+- can get events
+- can participate in event
+
+## Statuses
+
+### Approved
+- can get events
+- can post events
+- can update his events
+- can delete his events
+- can participate in event
+
+### Pending
+- can get events
+- can participate in event
+
+
 # Event Manager API Documentation
 
 This API allows users to manage events, including creating, updating, deleting, and participating in events. The API also supports role-based authorization to ensure only authorized users can perform certain actions.
