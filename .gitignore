@@ -236,8 +236,8 @@ _pkginfo.txt
 !?*.[Cc]ache/
 
 # database
-Database/*
-!Database/.gitkeep
+EventManager/Database/*
+!EventManager/Database/.gitkeep
 
 # Others
 ClientBin/
