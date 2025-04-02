@@ -237,6 +237,7 @@ _pkginfo.txt
 
 # database
 Database/*
+!Database/.gitkeep
 
 # Others
 ClientBin/
