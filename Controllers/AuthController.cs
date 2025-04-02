@@ -17,7 +17,7 @@ namespace EventManager.Controllers
 
         [HttpPost("register")]
         [AllowAnonymous]
-        public async Task<ActionResult<User>> Register(UserRegisterDto request)
+        public async Task<ActionResult<UserDto>> Register(UserRegisterDto request)
         {
             var User = await authService.RegisterAsync(request);
 
@@ -26,7 +26,15 @@ namespace EventManager.Controllers
                 return BadRequest("Username already exists.");
             }
 
-            return Ok(User);
+            var UserDto = new UserDto
+            {
+                Id = User.Id,
+                Name = User.Name,
+                Username = User.Username,
+                Email = User.Email,
+            };
+
+            return Ok(UserDto);
         }
 
         [HttpPost("login")]

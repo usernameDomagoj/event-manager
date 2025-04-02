@@ -11,12 +11,13 @@ namespace EventManager.Entities
         public string Name { get; set; } = string.Empty;
         public string Username {  get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-        public UserStatus Status { get; set; } // approved | pending
-        public UserRole Role { get; set; } // admin | organizer | user
+        public UserStatus Status { get; set; }
+        public UserRole Role { get; set; }
+        public DateTime CreatedDate { get; set; }
         public string PasswordHash { get; set; } = string.Empty;
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiryTime { get; set; }
-        public DateTime? CreatedDate { get; set; }
+        
 
         // relation many to many
         [JsonIgnore]
