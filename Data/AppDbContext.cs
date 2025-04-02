@@ -43,7 +43,8 @@ namespace EventManager.Data
                     Email = "admin@admin",
                     Status = UserStatus.Approved,
                     Role = UserRole.Admin,
-                    CreatedDate = new DateTime(2000, 5, 20)
+                    CreatedDate = new DateTime(2000, 5, 20),
+                    PasswordHash = "AQAAAAIAAYagAAAAEEc/I7v/ex3GoMGvujgyicX/HLLdW1cHvWusdBHnYUDTV7EJuDemj6krBLqFf7VS3g==" // password: "admin"
                 }
              );
 
