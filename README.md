@@ -11,6 +11,17 @@ Key features include:
 
 This application offers a robust and secure backend solution for event-driven applications, utilizing the latest .NET technologies for optimal performance and ease of use.
 
+# How to start
+
+Firstly, create a database by running the command: `dotnet ef database update`.
+If successful, a database will be created in Database folder with initial events and **admin user**.
+
+Admin user login data:
+- username: `admin`
+- password: `admin`
+
+With admin privileges, you can change user role (`Admin`, `Organizer` and `User`) and user status (`Approved` and `Pending`) to give them to give them accordingly privileges.
+
 # Event Manager API Documentation
 
 This API allows users to manage events, including creating, updating, deleting, and participating in events. The API also supports role-based authorization to ensure only authorized users can perform certain actions.
