@@ -196,6 +196,11 @@ namespace EventManager.Controllers
             var UserId = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var UserData = await _context.Users.FindAsync(UserId);
 
+            if (UserData?.Status != UserStatus.Approved)
+            {
+                return Problem("User is not approved.", null, 403);
+            }
+
             if (UserData == null)
             {
                 return NotFound("User not found.");

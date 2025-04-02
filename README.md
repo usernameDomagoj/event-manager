@@ -53,8 +53,7 @@ With admin privileges, you can change user role (`Admin`, `Organizer` and `User`
 - can participate in event
 
 ### Pending
-- can get events
-- can participate in event
+- can wait for admin approval :)
 
 
 # Event Manager API Documentation
