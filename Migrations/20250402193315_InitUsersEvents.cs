@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EventManager.Migrations
 {
     /// <inheritdoc />
-    public partial class InitEvents : Migration
+    public partial class InitUsersEvents : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -24,7 +24,10 @@ namespace EventManager.Migrations
                     Email = table.Column<string>(type: "TEXT", nullable: false),
                     Status = table.Column<int>(type: "INTEGER", nullable: false),
                     Role = table.Column<int>(type: "INTEGER", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    PasswordHash = table.Column<string>(type: "TEXT", nullable: false),
+                    RefreshToken = table.Column<string>(type: "TEXT", nullable: true),
+                    RefreshTokenExpiryTime = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -41,7 +44,7 @@ namespace EventManager.Migrations
                     Description = table.Column<string>(type: "TEXT", nullable: false),
                     Date = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Location = table.Column<string>(type: "TEXT", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     LastUpdatedDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     CreatedById = table.Column<int>(type: "INTEGER", nullable: false)
                 },
@@ -82,8 +85,8 @@ namespace EventManager.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Email", "Name", "Role", "Status", "Username" },
-                values: new object[] { 1, "admin@admin", "Admin", 0, 0, "admin" });
+                columns: new[] { "Id", "CreatedDate", "Email", "Name", "PasswordHash", "RefreshToken", "RefreshTokenExpiryTime", "Role", "Status", "Username" },
+                values: new object[] { 1, new DateTime(2000, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@admin", "Admin", "AQAAAAIAAYagAAAAEEc/I7v/ex3GoMGvujgyicX/HLLdW1cHvWusdBHnYUDTV7EJuDemj6krBLqFf7VS3g==", null, null, 0, 0, "admin" });
 
             migrationBuilder.InsertData(
                 table: "Events",

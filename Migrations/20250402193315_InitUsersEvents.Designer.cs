@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250327201727_UpdateUser")]
-    partial class UpdateUser
+    [Migration("20250402193315_InitUsersEvents")]
+    partial class InitUsersEvents
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,7 +29,7 @@ namespace EventManager.Migrations
                     b.Property<int>("CreatedById")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("CreatedDate")
+                    b.Property<DateTime>("CreatedDate")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Date")
@@ -135,8 +135,7 @@ namespace EventManager.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("CreatedDate")
-                        .ValueGeneratedOnAddOrUpdate()
+                    b.Property<DateTime>("CreatedDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
@@ -178,7 +177,7 @@ namespace EventManager.Migrations
                             CreatedDate = new DateTime(2000, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@admin",
                             Name = "Admin",
-                            PasswordHash = "",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEc/I7v/ex3GoMGvujgyicX/HLLdW1cHvWusdBHnYUDTV7EJuDemj6krBLqFf7VS3g==",
                             Role = 0,
                             Status = 0,
                             Username = "admin"
