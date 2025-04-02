@@ -26,6 +26,14 @@ namespace EventManager.Controllers
         [Authorize]
         public async Task<ActionResult<IEnumerable<EventDto>>> GetAll(string? order, string? searchTerm, int? pageSize, int? page)
         {
+            var UserId = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var UserData = await _context.Users.FindAsync(UserId);
+
+            if (UserData?.Status != UserStatus.Approved)
+            {
+                return Problem("User is not approved.", null, 403);
+            }
+
             var Events = from e in _context.Events
                          .Include(e => e.CreatedBy)
                          .Include(e => e.Participants)
@@ -67,6 +75,14 @@ namespace EventManager.Controllers
         [Authorize]
         public async Task<ActionResult<EventDto>> GetById(int id)
         {
+            var UserId = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var UserData = await _context.Users.FindAsync(UserId);
+
+            if (UserData?.Status != UserStatus.Approved)
+            {
+                return Problem("User is not approved.", null, 403);
+            }
+
             var Event = await _context.Events
                         .Include(e => e.CreatedBy)
                         .Include(e => e.Participants)
